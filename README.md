@@ -12,12 +12,10 @@
 ### 🛠 技术栈 | Tech Stack
 
 - FE
-![HTML](https://img.shields.io/badge/-HTML-333333?style=flat&logo=html5&logoColor=FCC624)
-![CSS3](https://img.shields.io/badge/-CSS-333333?style=flat&logo=css3&logoColor=FF4800)
 ![JavaScript](https://img.shields.io/badge/-JavaScript-333333?style=flat&logo=JavaScript&logoColor=FCC624)
 ![TyepScript](https://img.shields.io/badge/-TyepScript-333333?style=flat&logo=typescript&logoColor=FCC624)
 ![React](https://img.shields.io/badge/-React-333333?style=flat&logo=react)
-![Vue](https://img.shields.io/badge/-VueJS-333333?style=flat&logo=Vue.js)
+![Vue](https://img.shields.io/badge/-Vue-333333?style=flat&logo=Vue.js)
 ![Webpack](https://img.shields.io/badge/-Webpack-333333?style=flat&logo=webpack)
 ![ReactNative](https://img.shields.io/badge/-ReactNative-333333?style=flat&logo=rn)
 - RD
