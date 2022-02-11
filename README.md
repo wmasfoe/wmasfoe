@@ -1,7 +1,34 @@
-[![Anurag's GitHub stats](https://github-readme-stats.vercel.app/api?username=gaearon-byte)](https://github.com/anuraghazra/github-readme-stats)
+## Hello GitHub Fans 👋
 
-![Anurag's GitHub stats](https://github-readme-stats.vercel.app/api?username=gaearon-byte&show_icons=true)
+<img align="right" alt="GIF" src="https://raw.githubusercontent.com/JoeyBling/JoeyBling/master/pic/pusheencode.gif" />
 
-![Anurag's GitHub stats](https://github-readme-stats.vercel.app/api?username=anuraghazra&show_icons=true&theme=radical)
+### I'm Gaearon
 
-[![Top Langs](https://github-readme-stats.vercel.app/api/top-langs/?username=anuraghazra&layout=compact)](https://github.com/anuraghazra/github-readme-stats)
+- A Computer Engineering Undergraduate Open Source enthusiast.
+- 🌱 Currently working in BeiJing, China.
+- 💬 Ask me about Java, TypeScript and my projects on [lijq1103@163.com](mailto:lijq1103@163.com)
+- ⭐ You may like [mini-react](https://github.com/gaearon-byte/mini-react)
+
+### 🛠 技术栈 | Tech Stack
+
+- FE
+![HTML](https://img.shields.io/badge/-HTML-333333?style=flat&logo=html5&logoColor=FCC624)
+![CSS3](https://img.shields.io/badge/-CSS-333333?style=flat&logo=css3&logoColor=FF4800)
+![JavaScript](https://img.shields.io/badge/-JavaScript-333333?style=flat&logo=JavaScript&logoColor=FCC624)
+![TyepScript](https://img.shields.io/badge/-TyepScript-333333?style=flat&logo=typescript&logoColor=FCC624)
+![React](https://img.shields.io/badge/-React-333333?style=flat&logo=react)
+![Vue](https://img.shields.io/badge/-VueJS-333333?style=flat&logo=Vue.js)
+![Webpack](https://img.shields.io/badge/-Webpack-333333?style=flat&logo=webpack)
+![ReactNative](https://img.shields.io/badge/-ReactNative-333333?style=flat&logo=rn)
+- RD
+![NodeJS](https://img.shields.io/badge/-NodeJS-333333?style=flat&logo=nodedotjs)
+![MySQL](https://img.shields.io/badge/-MySQL-333333?style=flat&logo=mysql)
+![MongoDB](https://img.shields.io/badge/-MongoDB-333333?style=flat&logo=mongodb)
+![Koa2](https://img.shields.io/badge/-Koa2-333333?style=flat&logo=koa)
+![nest](https://img.shields.io/badge/-nest-333333?style=flat&logo=nest.js)
+- Other
+![Git](https://img.shields.io/badge/-Git-333333?style=flat&logo=git)
+![GitHub](https://img.shields.io/badge/-GitHub-333333?style=flat&logo=github)
+![Markdown](https://img.shields.io/badge/-Markdown-333333?style=flat&logo=markdown)
+
+> ***I love to make friends. so if you want to say hi, I'll be happy to meet you more!😊***
