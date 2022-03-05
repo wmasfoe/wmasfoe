@@ -7,7 +7,7 @@
 - A Computer Engineering Undergraduate Open Source enthusiast.
 - 🌱 Currently working in BeiJing, China.
 - 💬 Ask me about JavaScript, TypeScript and my projects on [lijq1103@163.com](mailto:lijq1103@163.com)
-- ⭐ You may like [mini-react](https://github.com/gaearon-byte/mini-react)
+- ⭐ You may like [mini-react](https://github.com/gaearon-byte/mini-react) and [low-code](https://github.com/gaearon-byte/low-code_drag)
 
 ### 🛠 技术栈 | Tech Stack
 
