@@ -18,7 +18,8 @@
 ![Vue](https://img.shields.io/badge/-Vue-333333?style=flat&logo=Vue.js)
 ![Webpack](https://img.shields.io/badge/-Webpack-333333?style=flat&logo=webpack)
 ![ReactNative](https://img.shields.io/badge/-ReactNative-333333?style=flat&logo=rn)
-- RD
+- BE
+![Go](https://img.shields.io/badge/-GoLang-333333?style=flat&logo=go)
 ![NodeJS](https://img.shields.io/badge/-NodeJS-333333?style=flat&logo=nodedotjs)
 ![MySQL](https://img.shields.io/badge/-MySQL-333333?style=flat&logo=mysql)
 ![MongoDB](https://img.shields.io/badge/-MongoDB-333333?style=flat&logo=mongodb)
