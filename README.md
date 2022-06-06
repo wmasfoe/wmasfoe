@@ -2,7 +2,7 @@
 
 <img align="right" alt="GIF" src="https://raw.githubusercontent.com/JoeyBling/JoeyBling/master/pic/pusheencode.gif" />
 
-### I'm Gaearon
+### I'm Jiaqi
 
 - A Computer Engineering Undergraduate Open Source enthusiast.
 - 🌱 Currently working in BeiJing, China.
