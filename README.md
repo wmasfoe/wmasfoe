@@ -1,7 +1,5 @@
 ## Hi there 👋
 
-### I'm Jiaqi
-
 - Open Source enthusiast.
 - 🌱 Currently working in BeiJing, China.
 - 💬 Ask me about JavaScript, TypeScript and my projects on [lijq1103@gmail.com](mailto:lijq1103@gmail.com)
