@@ -5,6 +5,8 @@
 - 💬 Ask me about JavaScript, TypeScript and my projects on [lijq1103@gmail.com](mailto:lijq1103@gmail.com)
 - ⭐ You may like [mini-react](https://github.com/gaearon-byte/mini-react) and [low-code](https://github.com/gaearon-byte/low-code_drag)
 
-[![GitHub Streak](https://streak-stats.demolab.com?user=wmasfoe&theme=telegram&date_format=%5BY.%5Dn.j)](https://git.io/streak-stats)
+[![GitHub Streak](https://streak-stats.demolab.com?user=wmasfoe&theme=telegram&date_format=%5BY.%5Dn.j&border=E4E2E2&stroke=E4E2E2)](https://git.io/streak-stats)
+
+![](http://github-profile-summary-cards.vercel.app/api/cards/productive-time?username=wmasfoe&theme=github&utcOffset=8)
 
 > ***I love to make friends. so if you want to say hi, I'll be happy to meet you more!😊***
