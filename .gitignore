@@ -1,3 +1,7 @@
+/.atl/
+/.claude*
+__pycache__/
+*.pyc
 node_modules/
+cache/avatar.jpg
 cache/loc-private.json
-preview/

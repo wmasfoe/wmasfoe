@@ -1,0 +1,74 @@
+# Refreshes the neofetch-style profile card (dark_mode.svg / light_mode.svg).
+#
+# fetch_stats.py hits the GitHub GraphQL API and caches the expensive
+# lines-of-code walk in cache/loc.json; build_card.py then regenerates both
+# SVGs from assets/ascii-art.txt + cache/stats.json. The cache is committed
+# back so the next run only walks repos whose head commit actually moved.
+name: Update Profile Card
+
+on:
+  schedule:
+    - cron: "17 5 * * *"
+
+  workflow_dispatch:
+
+  push:
+    paths:
+      - "assets/**"
+      - "tools/**"
+      - ".github/workflows/profile-card.yml"
+
+permissions:
+  contents: write
+
+concurrency:
+  group: profile-card-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+
+    steps:
+      - name: Clone repo
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install dependencies
+        run: pip install requests pillow
+
+      - name: Rebuild the ASCII portrait
+        run: python tools/build_ascii.py
+
+      - name: Fetch GitHub stats
+        env:
+          # STATS_TOKEN is the repository Actions secret (read:user). When it
+          # is unset, the built-in token still covers public figures.
+          GH_LOGIN: wmasfoe
+          GITHUB_TOKEN: ${{ secrets.STATS_TOKEN || secrets.GITHUB_TOKEN }}
+        run: python tools/fetch_stats.py
+
+      - name: Rebuild the card
+        run: python tools/build_card.py
+
+      - name: Rebuild the Pac-Man board
+        run: python tools/build_pacman.py
+
+      - name: Rebuild the link buttons
+        run: python tools/build_links.py
+
+      - name: Rebase onto any commits that landed meanwhile
+        run: git pull --rebase --autostash origin "${GITHUB_REF_NAME}"
+
+      - name: Commit the regenerated card
+        uses: stefanzweifel/git-auto-commit-action@v5
+        with:
+          commit_message: "chore: refresh profile card stats"
+          file_pattern: "*.svg cache/*.json assets/ascii-art.txt assets/ascii-art-light.txt"
