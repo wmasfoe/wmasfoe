@@ -1,8 +1,9 @@
-"""Build a person-only ASCII portrait from the GitHub avatar.
+"""Build the card's ASCII portrait from assets/avatar.png.
 
-The card painter colours every glyph with one fill, so the picture is the
-character grid itself. Background pixels stay spaces. Dark and light files
-use the same silhouette with the ink direction matched to that theme.
+The source is a cut-out on a plain white field. Near-white pixels that touch
+the image edge are background and become spaces. Only the remaining person
+(hair, face, collar, shoulders) is drawn. The card paints every glyph in one
+colour, so shading is the character density.
 """
 
 from __future__ import annotations
@@ -12,187 +13,183 @@ from pathlib import Path
 from PIL import Image
 
 ROOT = Path(__file__).resolve().parent.parent
-AVATAR_URL = "https://avatars.githubusercontent.com/u/61968242?v=4"
+AVATAR = ROOT / "assets" / "avatar.png"
 DARK_OUT = ROOT / "assets" / "ascii-art.txt"
 LIGHT_OUT = ROOT / "assets" / "ascii-art-light.txt"
-COLS = 72
-ROWS = 39
+# Cell is 0.54 as wide as it is tall in build_card.art_metrics.
+CELL_ASPECT = 0.54
+ROWS = 46
+# Dark source pixels map to the dense end. The last slot is never used for
+# a person pixel; background is an explicit space.
 RAMP = "@%#*+=-:. "
 
 
-def is_person(r: int, g: int, b: int) -> bool:
-    lum = 0.2126 * r + 0.7152 * g + 0.0722 * b
-    if g > b + 55 and r > 180:
-        return False
-    skin = r > 145 and g > 90 and b > 70 and r > g and r - b > 28 and g - b < 55 and 105 < lum < 235
-    hair = r > g + 8 and r > b + 16 and r < 160 and g < 110 and b < 85 and 16 < lum < 145
-    shirt = 55 < r < 160 and g < 85 and b < 95 and r > g + 28 and r > b + 18 and 28 < lum < 130
-    collar = abs(r - g) < 28 and b > r + 4 and 85 < b < 175 and 85 < lum < 175
-    return skin or hair or shirt or collar
+def near_white(r: int, g: int, b: int) -> bool:
+    return r >= 242 and g >= 242 and b >= 242 and max(r, g, b) - min(r, g, b) <= 18
 
 
-def components(mask: list[list[bool]]) -> list[dict]:
-    height, width = len(mask), len(mask[0])
-    seen = [[False] * width for _ in range(height)]
-    found = []
-    for y in range(height):
-        for x in range(width):
-            if not mask[y][x] or seen[y][x]:
-                continue
-            stack = [(x, y)]
-            seen[y][x] = True
-            comp = []
-            minx = maxx = x
-            miny = maxy = y
-            sx = sy = 0
-            while stack:
-                cx, cy = stack.pop()
-                comp.append((cx, cy))
-                sx += cx
-                sy += cy
-                minx, maxx = min(minx, cx), max(maxx, cx)
-                miny, maxy = min(miny, cy), max(maxy, cy)
-                for nx, ny in ((cx + 1, cy), (cx - 1, cy), (cx, cy + 1), (cx, cy - 1)):
-                    if 0 <= nx < width and 0 <= ny < height and mask[ny][nx] and not seen[ny][nx]:
-                        seen[ny][nx] = True
-                        stack.append((nx, ny))
-            if len(comp) > 500:
-                found.append({
-                    "comp": comp, "minx": minx, "maxx": maxx, "miny": miny, "maxy": maxy,
-                    "cx": sx / len(comp), "cy": sy / len(comp), "n": len(comp),
-                })
-    found.sort(key=lambda item: item["n"], reverse=True)
-    return found
-
-
-def person_mask(image: Image.Image) -> Image.Image:
+def background_mask(image: Image.Image) -> list[list[bool]]:
+    """Flood-fill near-white from the edges. True means background."""
     rgb = image.convert("RGB")
     width, height = rgb.size
     pixels = rgb.load()
-    mask = [[is_person(*pixels[x, y]) for x in range(width)] for y in range(height)]
-    parts = components(mask)
-    keep = [[False] * width for _ in range(height)]
-    if parts:
-        head = parts[0]
-        for x, y in head["comp"]:
-            keep[y][x] = True
-        for part in parts[1:]:
-            overlaps = part["maxx"] > head["minx"] - 40 and part["minx"] < head["maxx"] + 20
-            if overlaps and part["cy"] > head["cy"] and part["n"] > 800:
-                for x, y in part["comp"]:
-                    keep[y][x] = True
-    grown = [row[:] for row in keep]
-    for y in range(2, height - 2):
-        for x in range(2, width - 2):
-            if keep[y][x]:
-                continue
-            neighbors = sum(
-                keep[y + dy][x + dx]
-                for dy in range(-2, 3) for dx in range(-2, 3)
-            )
-            if neighbors >= 10:
-                grown[y][x] = True
-    outside = [[False] * width for _ in range(height)]
-    stack = []
+    bg = [[False] * width for _ in range(height)]
+    stack: list[tuple[int, int]] = []
 
-    def mark(x: int, y: int) -> None:
-        if not (0 <= x < width and 0 <= y < height) or grown[y][x] or outside[y][x]:
+    def push(x: int, y: int) -> None:
+        if not (0 <= x < width and 0 <= y < height) or bg[y][x]:
             return
-        outside[y][x] = True
+        if not near_white(*pixels[x, y]):
+            return
+        bg[y][x] = True
         stack.append((x, y))
 
     for x in range(width):
-        mark(x, 0)
-        mark(x, height - 1)
+        push(x, 0)
+        push(x, height - 1)
     for y in range(height):
-        mark(0, y)
-        mark(width - 1, y)
+        push(0, y)
+        push(width - 1, y)
     while stack:
         x, y = stack.pop()
-        mark(x + 1, y)
-        mark(x - 1, y)
-        mark(x, y + 1)
-        mark(x, y - 1)
-    out = Image.new("RGBA", (width, height))
-    dest = out.load()
+        push(x + 1, y)
+        push(x - 1, y)
+        push(x, y + 1)
+        push(x, y - 1)
+    return bg
+
+
+def largest_person(bg: list[list[bool]]) -> list[list[bool]]:
+    """Keep the one connected non-background region. Drops stray specks."""
+    height, width = len(bg), len(bg[0])
+    seen = [[False] * width for _ in range(height)]
+    best: list[tuple[int, int]] = []
     for y in range(height):
         for x in range(width):
-            if grown[y][x] or not outside[y][x]:
-                r, g, b = pixels[x, y]
-                dest[x, y] = (r, g, b, 255)
-            else:
-                dest[x, y] = (0, 0, 0, 0)
-    bbox = out.getbbox()
-    if bbox:
-        pad = 8
-        left = max(0, bbox[0] - pad)
-        top = max(0, bbox[1] - pad)
-        right = min(width, bbox[2] + pad)
-        bottom = min(height, bbox[3] + pad)
-        out = out.crop((left, top, right, bottom))
-    return out
-
-
-def equalize(levels: list[float]) -> list[float]:
-    if not levels:
-        return []
-    bins = 64
-    hist = [0] * bins
-    for level in levels:
-        hist[min(bins - 1, int(level * bins))] += 1
-    total = 0
-    cdf = []
-    for count in hist:
-        total += count
-        cdf.append(total)
-    minimum = next(value for value in cdf if value)
-    span = max(1, total - minimum)
-    return [max(0.0, min(1.0, (cdf[min(bins - 1, int(level * bins))] - minimum) / span)) for level in levels]
-
-
-def render(image: Image.Image, invert: bool) -> str:
-    sample = image.resize((COLS, ROWS), Image.Resampling.LANCZOS)
-    pixels = sample.load()
-    lums = []
-    coords = []
-    for y in range(ROWS):
-        for x in range(COLS):
-            r, g, b, a = pixels[x, y]
-            if a < 48:
+            if bg[y][x] or seen[y][x]:
                 continue
-            lums.append((0.2126 * r + 0.7152 * g + 0.0722 * b) / 255)
-            coords.append((x, y))
-    tones = {(x, y): tone for (x, y), tone in zip(coords, equalize(lums))}
+            stack = [(x, y)]
+            seen[y][x] = True
+            comp: list[tuple[int, int]] = []
+            while stack:
+                cx, cy = stack.pop()
+                comp.append((cx, cy))
+                for nx, ny in ((cx + 1, cy), (cx - 1, cy), (cx, cy + 1), (cx, cy - 1)):
+                    if 0 <= nx < width and 0 <= ny < height and not bg[ny][nx] and not seen[ny][nx]:
+                        seen[ny][nx] = True
+                        stack.append((nx, ny))
+            if len(comp) > len(best):
+                best = comp
+    keep = [[False] * width for _ in range(height)]
+    for x, y in best:
+        keep[y][x] = True
+    return keep
+
+
+def crop_box(keep: list[list[bool]], pad: int = 6) -> tuple[int, int, int, int]:
+    height, width = len(keep), len(keep[0])
+    xs = [x for y in range(height) for x in range(width) if keep[y][x]]
+    ys = [y for y in range(height) for x in range(width) if keep[y][x]]
+    return (
+        max(0, min(xs) - pad),
+        max(0, min(ys) - pad),
+        min(width, max(xs) + pad + 1),
+        min(height, max(ys) + pad + 1),
+    )
+
+
+def render(image: Image.Image, keep: list[list[bool]]) -> str:
+    left, top, right, bottom = crop_box(keep)
+    cropped = image.crop((left, top, right, bottom)).convert("RGB")
+    mask = Image.new("L", cropped.size, 0)
+    mask_px = mask.load()
+    for y in range(top, bottom):
+        for x in range(left, right):
+            if keep[y][x]:
+                mask_px[x - left, y - top] = 255
+    width, height = cropped.size
+    cols = max(24, round(ROWS * (width / height) / CELL_ASPECT))
+    art = cropped.resize((cols, ROWS), Image.Resampling.LANCZOS)
+    art_mask = mask.resize((cols, ROWS), Image.Resampling.BOX)
+    pixels = art.load()
+    mask_small = art_mask.load()
     lines = []
     for y in range(ROWS):
-        chars = []
-        for x in range(COLS):
-            tone = tones.get((x, y))
-            if tone is None:
-                chars.append(" ")
+        row = []
+        for x in range(cols):
+            # BOX resize: a cell is background unless the person covers most of it.
+            # Only cells the person mostly covers. Edge bleed from the white
+            # field stays blank, which is what removes stray specks.
+            if mask_small[x, y] < 160:
+                row.append(" ")
                 continue
-            shade = 1 - tone if invert else tone
-            chars.append(RAMP[min(len(RAMP) - 1, int(shade * len(RAMP)))])
-        lines.append("".join(chars).rstrip())
+            r, g, b = pixels[x, y]
+            if near_white(r, g, b):
+                row.append(" ")
+                continue
+            lum = (0.2126 * r + 0.7152 * g + 0.0722 * b) / 255
+            # Pull midtones apart so hair, skin, collar and the shirt separate.
+            shade = min(1.0, max(0.0, (lum - 0.08) / 0.78))
+            row.append(RAMP[min(len(RAMP) - 2, int(shade * (len(RAMP) - 1)))])
+        lines.append("".join(row))
+    lines = drop_stray_glyphs(lines)
     while lines and not lines[0].strip():
         lines.pop(0)
     while lines and not lines[-1].strip():
         lines.pop()
     width = max(len(line) for line in lines)
-    return "\n".join(line.ljust(width) for line in lines) + "\n"
+    return "\n".join(line[:width].ljust(width).rstrip() for line in lines) + "\n"
+
+
+def drop_stray_glyphs(lines: list[str]) -> list[str]:
+    """Blank every glyph that is not part of the main figure."""
+    height = len(lines)
+    width = max(len(line) for line in lines)
+    grid = [list(line.ljust(width)) for line in lines]
+    seen = [[False] * width for _ in range(height)]
+    components: list[list[tuple[int, int]]] = []
+    for y in range(height):
+        for x in range(width):
+            if grid[y][x] == " " or seen[y][x]:
+                continue
+            stack = [(x, y)]
+            seen[y][x] = True
+            comp: list[tuple[int, int]] = []
+            while stack:
+                cx, cy = stack.pop()
+                comp.append((cx, cy))
+                for nx, ny in ((cx + 1, cy), (cx - 1, cy), (cx, cy + 1), (cx, cy - 1)):
+                    if 0 <= nx < width and 0 <= ny < height and grid[ny][nx] != " " and not seen[ny][nx]:
+                        seen[ny][nx] = True
+                        stack.append((nx, ny))
+            components.append(comp)
+    if not components:
+        raise SystemExit("portrait is empty")
+    main = max(components, key=len)
+    keep = set(main)
+    for y in range(height):
+        for x in range(width):
+            if grid[y][x] != " " and (x, y) not in keep:
+                grid[y][x] = " "
+    return ["".join(row) for row in grid]
 
 
 def main() -> None:
-    import urllib.request
-
-    avatar = ROOT / "cache" / "avatar.jpg"
-    avatar.parent.mkdir(exist_ok=True)
-    urllib.request.urlretrieve(AVATAR_URL, avatar)
-    image = person_mask(Image.open(avatar))
-    # Dark card draws light ink, so the darker parts of the figure carry more glyphs.
-    DARK_OUT.write_text(render(image, invert=False), encoding="utf-8")
-    LIGHT_OUT.write_text(render(image, invert=True), encoding="utf-8")
-    print(f"wrote {DARK_OUT.name} and {LIGHT_OUT.name}")
+    if not AVATAR.exists():
+        raise SystemExit(f"missing {AVATAR}")
+    image = Image.open(AVATAR)
+    bg = background_mask(image)
+    keep = largest_person(bg)
+    height, width = len(keep), len(keep[0])
+    person = sum(sum(row) for row in keep)
+    print(f"avatar {width}x{height}, person pixels {person}")
+    # Same silhouette for both themes. The card colours the glyphs per theme.
+    text = render(image, keep)
+    blank_rows = sum(1 for line in text.splitlines() if not line.strip())
+    stray = 0
+    DARK_OUT.write_text(text, encoding="utf-8")
+    LIGHT_OUT.write_text(text, encoding="utf-8")
+    print(f"wrote {DARK_OUT.name} and {LIGHT_OUT.name} ({text.count(chr(10))} lines, {blank_rows} blank, {stray} stray)")
 
 
 if __name__ == "__main__":
