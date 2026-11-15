@@ -348,7 +348,13 @@ def month_labels(weeks: list[list]) -> list[tuple[int, str]]:
 def build(theme: str, cal: dict) -> str:
     c = THEMES[theme]
     weeks = cal["weeks"]
-    ramp = [mix(c["bg"], c["fg"], t) for t in LEVEL_MIX]
+    # GitHub's own contribution colours. Quartiles are skewed by a few huge
+    # days, so most of this year is the first green; greyscale made that read
+    # as an empty board.
+    ramp = {
+        "light": ["#ebedf0", "#9be9a8", "#40c463", "#30a14e", "#216e39"],
+        "dark": ["#161b22", "#0e4429", "#006d32", "#26a641", "#39d353"],
+    }[theme]
 
     left = MARGIN + LABEL_COL
     header_y = MARGIN + HEADER_FONT
@@ -432,30 +438,12 @@ def build(theme: str, cal: dict) -> str:
         f'<g visibility="hidden">{moving}{frames}</g></g></g>'
     )
 
-    # Header: GitHub's own sentence, with the number counting up as an arcade
-    # score. Every value is padded to the final width, so in a monospace font
-    # the words after it never shift.
-    eaten.sort()
-    steps, score = [(0.0, 0)], 0
-    for t, count in eaten:
-        if count:
-            score += count
-            steps.append((t, score))
-    width = len(f"{cal['total']:,}")
-    number = []
-    for i, (t, value) in enumerate(steps):
-        nxt = steps[i + 1][0] if i + 1 < len(steps) else None
-        if i == 0:
-            vals, times = ["visible", "hidden"], [0.0, nxt]
-        elif nxt is None:
-            vals, times = ["hidden", "visible"], [0.0, t]
-        else:
-            vals, times = ["hidden", "visible", "hidden"], [0.0, t, nxt]
-        number.append(
-            f'<tspan x="{MARGIN:g}" visibility="{"visible" if i == 0 else "hidden"}">'
-            f'{anim_discrete(tl, "visibility", vals, times)}{value:>{width},}</tspan>'
-        )
-    words_x = MARGIN + width * HEADER_FONT * ADVANCE
+    # The running score starts at 0 and only reaches the year total after
+    # Pac-Man has eaten the board, so a still of the SVG looks like a tiny year.
+    # Show the calendar total the whole time; it is the same number GitHub prints.
+    total_label = f"{cal['total']:,}"
+    number = [f'<tspan x="{MARGIN:g}">{total_label}</tspan>']
+    words_x = MARGIN + len(total_label) * HEADER_FONT * ADVANCE
 
     months = "".join(f'<text x="{left + col * PITCH:g}" y="{months_y:g}">{name}</text>'
                      for col, name in month_labels(weeks))
