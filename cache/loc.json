@@ -97,7 +97,7 @@
   "wmasfoe/homebrew-tap": {
     "added": 5,
     "deleted": 5,
-    "oid": "ea82594cf719cd8dc7fb69bb588a606930434ae2"
+    "oid": "e9865783d4f3d7d0fed38d2deabe70c18b8e3682"
   },
   "wmasfoe/learn-nextv14": {
     "added": 3008,
@@ -110,9 +110,9 @@
     "oid": "7019edbe7ff37b32160b4f87f47a4d58eeac9f9c"
   },
   "wmasfoe/md-editor": {
-    "added": 425631,
-    "deleted": 120224,
-    "oid": "62b336e444353ac55eca53f31fb5dca932daeb32"
+    "added": 435047,
+    "deleted": 120428,
+    "oid": "77adb517c01203dbcf5950502d67f23c43697685"
   },
   "wmasfoe/mdx-components-repo": {
     "added": 5741,
@@ -245,8 +245,8 @@
     "oid": "40d401210ea0b03b7cec03f6a0eee7951f42fb03"
   },
   "wmasfoe/wmasfoe": {
-    "added": 7387,
-    "deleted": 3006,
-    "oid": "aafcef638bd4deb7b335c0a40638a82ca4f00926"
+    "added": 7402,
+    "deleted": 3021,
+    "oid": "b03d95ffcbabfab2f8a37b99e05752a37a8cda13"
   }
 }
