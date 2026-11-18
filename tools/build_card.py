@@ -89,7 +89,7 @@ INFO = [
     None,
     ("Focus.AI", "Agents, MCP, Skills"),
     ("Focus.Web", "Next.js, Serverless, Gin"),
-    ("Hobbies", "Skiing, Hiking/Mountaineering"),
+    ("Hobbies", "Photography, Hiking, Skiing"),
 ]
 
 CONTACT = [
