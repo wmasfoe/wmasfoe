@@ -13,7 +13,7 @@ text, tspan {white-space: pre;}
 </style>
 <defs><rect id="d" width="14" height="14" rx="3"/></defs>
 <rect width="1018px" height="224px" fill="#161b22" rx="15"/>
-<text y="29" font-size="14px" fill="#c9d1d9"><tspan x="15">2,738</tspan></text>
+<text y="29" font-size="14px" fill="#c9d1d9"><tspan x="15">2,741</tspan></text>
 <text x="56.965" y="29" font-size="14px" fill="#c9d1d9"> contributions in the last year</text>
 <g font-size="12px" fill="#616e7f"><text x="53" y="55">Nov</text><text x="107" y="55">Dec</text><text x="179" y="55">Jan</text><text x="251" y="55">Feb</text><text x="323" y="55">Mar</text><text x="413" y="55">Apr</text><text x="485" y="55">May</text><text x="575" y="55">Jun</text><text x="647" y="55">Jul</text><text x="719" y="55">Aug</text><text x="809" y="55">Sep</text><text x="881" y="55">Oct</text><text x="953" y="55">Nov</text><text x="15" y="92.2">Mon</text><text x="15" y="128.2">Wed</text><text x="15" y="164.2">Fri</text>
 <text x="876.224" y="209" text-anchor="end">Less</text>
