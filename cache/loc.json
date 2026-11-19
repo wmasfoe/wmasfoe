@@ -97,7 +97,7 @@
   "wmasfoe/homebrew-tap": {
     "added": 5,
     "deleted": 5,
-    "oid": "5522fdb65f7f420f65c5bcfe0bb197c94ea4e3f5"
+    "oid": "0536cae49e88488ea728024f556cbbca60718a6f"
   },
   "wmasfoe/learn-nextv14": {
     "added": 3008,
@@ -110,9 +110,9 @@
     "oid": "7019edbe7ff37b32160b4f87f47a4d58eeac9f9c"
   },
   "wmasfoe/md-editor": {
-    "added": 438612,
-    "deleted": 121941,
-    "oid": "ddcc8ee266106f733efdb8726273596d69800212"
+    "added": 439029,
+    "deleted": 121967,
+    "oid": "68e42f0aa5f508dd34f3439b27884956f429d48a"
   },
   "wmasfoe/mdx-components-repo": {
     "added": 5741,
@@ -165,9 +165,9 @@
     "oid": "0c59e6579ccba0c123c492c87e1ce1caad43a8c6"
   },
   "wmasfoe/pairdesk": {
-    "added": 48989,
-    "deleted": 30706,
-    "oid": "8a86826b8fc2c692389fda89581aaa21a6e8a2ad"
+    "added": 52115,
+    "deleted": 31090,
+    "oid": "5e648965efb599b2e77f362aa358c5b223abfd65"
   },
   "wmasfoe/react-docs-codelive-mini": {
     "added": 21094,
@@ -245,8 +245,8 @@
     "oid": "40d401210ea0b03b7cec03f6a0eee7951f42fb03"
   },
   "wmasfoe/wmasfoe": {
-    "added": 7467,
-    "deleted": 3078,
-    "oid": "a812bb31045d682cd382d3f0c15c67cc1b2817a9"
+    "added": 7483,
+    "deleted": 3094,
+    "oid": "dc02786605f75937d9b69407b9db5cb34348ecef"
   }
 }
